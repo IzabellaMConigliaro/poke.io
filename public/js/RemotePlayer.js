@@ -22,8 +22,8 @@ var RemotePlayer = function (index, game, player, startX, startY, startAngle) {
   this.player.body.immovable = true
   this.player.body.collideWorldBounds = true
   this.player.body.setCircle(16);
-  this.player.body.fixedRotation = true;
 
+  this.player.body.fixedRotation = true;
 
   this.player.angle = angle
 

@@ -355,8 +355,6 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 
 function preload () {
   game.load.image('earth', 'assets/scorched_earth.png');
-  game.load.image('teste', 'assets/tank2.png');
-
   game.load.atlas('dude', 'assets/tanks.png', 'assets/tanks.json');
   game.load.atlas('enemy', 'assets/enemy-tanks.png', 'assets/tanks.json');
 }
@@ -386,7 +384,6 @@ function create () {
   game.physics.p2.setImpactEvents(true);
 
   game.physics.p2.updateBoundsCollisionGroup();
-
 
   playerCollisionGroup = game.physics.p2.createCollisionGroup();
   enemiesCollisionGroup = game.physics.p2.createCollisionGroup();
@@ -523,7 +520,7 @@ function onNewPlayer (data) {
   enemies.push(new RemotePlayer(data.id, game, player, data.x, data.y, data.angle))
   enemies[enemies.length - 1].player.body.setCollisionGroup(enemiesCollisionGroup);
   enemies[enemies.length - 1].player.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
-
+	enemies[enemies.length - 1].player.body.damping = 1;
 }
 
 // Move player
@@ -565,13 +562,18 @@ function onCollision (collisionID) {
 
 function onSendLock (lockEnemies, idEnemies) {
 	lockEnemies.__proto__ = locks.createMutex().__proto__
-  	console.log(idEnemies)
+  	console.log("Receive Lock: " + idEnemies)
 
 	lockEnemies.lock(function () {
 		console.log('We got the lock!');
 		console.log(lockEnemies)
 		lockEnemies.unlock();
-		socket.emit('release lock', idEnemies)
+
+		var millisecondsToWait = 60000;
+		setTimeout(function() {
+			socket.emit('release lock', idEnemies)
+		}, millisecondsToWait);
+
   });
 }
 
