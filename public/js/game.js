@@ -1,9 +1,6 @@
 /* global Phaser RemotePlayer io */
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
-var locks = require('locks');
-
-
 function preload () {
   game.load.image('earth', 'assets/scorched_earth.png');
   game.load.image('teste', 'assets/tank2.png');

@@ -484,6 +484,9 @@ var setEventHandlers = function () {
   socket.on('collision', onCollision)
 
   socket.on('send lock', onSendLock)
+
+	socket.on('release lock', onReleaseLock)
+
 }
 
 // Socket connected
@@ -560,13 +563,20 @@ function onCollision (collisionID) {
   socket.emit('collision', collisionID)
 }
 
-function onSendLock (lockEnemies) {
-  console.log(lockEnemies)
-  lockEnemies.lock(function () {
-    console.log('We got the lock!');
-    console.log(lockEnemies)
-    lockEnemies.unlock();
+function onSendLock (lockEnemies, idEnemies) {
+	lockEnemies.__proto__ = locks.createMutex().__proto__
+  	console.log(idEnemies)
+
+	lockEnemies.lock(function () {
+		console.log('We got the lock!');
+		console.log(lockEnemies)
+		lockEnemies.unlock();
+		socket.emit('release lock', idEnemies)
   });
+}
+
+function onReleaseLock() {
+	socket.emit('release lock', idEnemies)
 }
 
 function update() {
