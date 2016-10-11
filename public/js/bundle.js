@@ -1,8 +1,357 @@
-/* global Phaser RemotePlayer io */
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var Semaphore = require('./lib/Semaphore');
+var CondVariable = require('./lib/CondVariable');
+var Mutex = require('./lib/Mutex');
+var ReadWriteLock = require('./lib/ReadWriteLock');
 
+
+exports.Semaphore = Semaphore;
+exports.CondVariable = CondVariable;
+exports.Mutex = Mutex;
+exports.ReadWriteLock = ReadWriteLock;
+
+
+exports.createCondVariable = function (initialValue) {
+	return new CondVariable(initialValue);
+};
+
+exports.createSemaphore = function (initialCount) {
+	return new Semaphore(initialCount);
+};
+
+exports.createMutex = function () {
+	return new Mutex();
+};
+
+exports.createReadWriteLock = function () {
+	return new ReadWriteLock();
+};
+
+},{"./lib/CondVariable":2,"./lib/Mutex":3,"./lib/ReadWriteLock":4,"./lib/Semaphore":5}],2:[function(require,module,exports){
+function CondVariable(initialValue) {
+	this._value = initialValue;
+	this._waiting = [];
+}
+
+module.exports = CondVariable;
+
+
+function condToFunc(cond) {
+	if (typeof cond === 'function') {
+		return cond;
+	}
+
+	if (typeof cond === 'number' || typeof cond === 'boolean' || typeof cond === 'string') {
+		return function (value) {
+			return value === cond;
+		};
+	}
+
+	if (cond && typeof cond === 'object' && cond instanceof RegExp) {
+		return function (value) {
+			return cond.test(value);
+		};
+	}
+
+	throw new TypeError('Unknown condition type: ' + (typeof cond));
+}
+
+
+CondVariable.prototype.get = function () {
+	return this._value;
+};
+
+
+CondVariable.prototype.wait = function (cond, cb) {
+	var test = condToFunc(cond);
+
+	if (test(this._value)) {
+		return cb.call(this);
+	}
+
+	this._waiting.push({ test: test, cb: cb });
+};
+
+
+CondVariable.prototype.set = function (value) {
+	this._value = value;
+
+	for (var i = 0; i < this._waiting.length; i++) {
+		var waiter = this._waiting[i];
+
+		if (waiter.test(value)) {
+			this._waiting.splice(i, 1);
+			i -= 1;
+			waiter.cb.call(this);
+		}
+	}
+};
+
+},{}],3:[function(require,module,exports){
+function Mutex() {
+	this.isLocked = false;
+	this._waiting = [];
+}
+
+module.exports = Mutex;
+
+
+Mutex.prototype.lock = function (cb) {
+	if (this.isLocked) {
+		this._waiting.push(cb);
+	} else {
+		this.isLocked = true;
+		cb.call(this);
+	}
+};
+
+
+Mutex.prototype.timedLock = function (ttl, cb) {
+	if (!this.isLocked) {
+		this.isLocked = true;
+		return cb.call(this);
+	}
+
+	var timer, that = this;
+
+	this._waiting.push(function () {
+		clearTimeout(timer);
+
+		if (!cb) {
+			that.unlock();
+			return;
+		}
+
+		cb.call(this);
+		cb = null;
+	});
+
+	timer = setTimeout(function () {
+		if (cb) {
+			cb.call(this, new Error('Lock timed out'));
+			cb = null;
+		}
+	}, ttl);
+};
+
+
+Mutex.prototype.tryLock = function () {
+	if (this.isLocked) {
+		return false;
+	}
+
+	this.isLocked = true;
+	return true;
+};
+
+
+Mutex.prototype.unlock = function () {
+	if (!this.isLocked) {
+		throw new Error('Mutex is not locked');
+	}
+
+	var waiter = this._waiting.shift();
+
+	if (waiter) {
+		waiter.call(this);
+	} else {
+		this.isLocked = false;
+	}
+};
+
+},{}],4:[function(require,module,exports){
+function ReadWriteLock() {
+	this.isLocked = false;
+	this._readLocks = 0;
+	this._waitingToRead = [];
+	this._waitingToWrite = [];
+}
+
+module.exports = ReadWriteLock;
+
+
+ReadWriteLock.prototype.readLock = function (cb) {
+	if (this.isLocked === 'W') {
+		this._waitingToRead.push(cb);
+	} else {
+		this._readLocks += 1;
+		this.isLocked = 'R';
+		cb.call(this);
+	}
+};
+
+
+ReadWriteLock.prototype.writeLock = function (cb) {
+	if (this.isLocked) {
+		this._waitingToWrite.push(cb);
+	} else {
+		this.isLocked = 'W';
+		cb.call(this);
+	}
+};
+
+
+ReadWriteLock.prototype.timedReadLock = function (ttl, cb) {
+	if (this.tryReadLock()) {
+		return cb.call(this);
+	}
+
+	var timer, that = this;
+
+	function waiter() {
+		clearTimeout(timer);
+
+		if (cb) {
+			var callback = cb;
+			cb = null;
+			callback.apply(that, arguments);
+		}
+	}
+
+	this._waitingToRead.push(waiter);
+
+	timer = setTimeout(function () {
+		var index = that._waitingToRead.indexOf(waiter);
+		if (index !== -1) {
+			that._waitingToRead.splice(index, 1);
+			waiter(new Error('ReadLock timed out'));
+		}
+	}, ttl);
+};
+
+
+ReadWriteLock.prototype.timedWriteLock = function (ttl, cb) {
+	if (this.tryWriteLock()) {
+		return cb.call(this);
+	}
+
+	var timer, that = this;
+
+	function waiter() {
+		clearTimeout(timer);
+
+		if (cb) {
+			var callback = cb;
+			cb = null;
+			callback.apply(that, arguments);
+		}
+	}
+
+	this._waitingToWrite.push(waiter);
+
+	timer = setTimeout(function () {
+		var index = that._waitingToWrite.indexOf(waiter);
+		if (index !== -1) {
+			that._waitingToWrite.splice(index, 1);
+			waiter(new Error('WriteLock timed out'));
+		}
+	}, ttl);
+};
+
+
+ReadWriteLock.prototype.tryReadLock = function () {
+	if (this.isLocked === 'W') {
+		return false;
+	}
+
+	this.isLocked = 'R';
+	this._readLocks += 1;
+	return true;
+};
+
+
+ReadWriteLock.prototype.tryWriteLock = function () {
+	if (this.isLocked) {
+		return false;
+	}
+
+	this.isLocked = 'W';
+	return true;
+};
+
+
+ReadWriteLock.prototype.unlock = function () {
+	var waiter;
+
+	if (this.isLocked === 'R') {
+		this._readLocks -= 1;
+
+		if (this._readLocks === 0) {
+			// allow one write lock through
+
+			waiter = this._waitingToWrite.shift();
+			if (waiter) {
+				this.isLocked = 'W';
+				waiter.call(this);
+			} else {
+				this.isLocked = false;
+			}
+		}
+	} else if (this.isLocked === 'W') {
+		// allow all read locks or one write lock through
+
+		var rlen = this._waitingToRead.length;
+
+		if (rlen === 0) {
+			waiter = this._waitingToWrite.shift();
+			if (waiter) {
+				this.isLocked = 'W';
+				waiter.call(this);
+			} else {
+				this.isLocked = false;
+			}
+		} else {
+			this.isLocked = 'R';
+			this._readLocks = rlen;
+
+			var waiters = this._waitingToRead.slice();
+			this._waitingToRead = [];
+
+			for (var i = 0; i < rlen; i++) {
+				waiters[i].call(this);
+			}
+		}
+	} else {
+		throw new Error('ReadWriteLock is not locked');
+	}
+};
+
+},{}],5:[function(require,module,exports){
+function Semaphore(initialCount) {
+	this._count = initialCount || 1;
+	this._waiting = [];
+}
+
+module.exports = Semaphore;
+
+
+Semaphore.prototype.wait = function (cb) {
+	this._count -= 1;
+
+	if (this._count < 0) {
+		this._waiting.push(cb);
+	} else {
+		cb.call(this);
+	}
+};
+
+
+Semaphore.prototype.signal = function () {
+	this._count += 1;
+
+	if (this._count <= 0) {
+		var waiter = this._waiting.shift();
+		if (waiter) {
+			waiter.call(this);
+		}
+	}
+};
+
+},{}],6:[function(require,module,exports){
+/* global Phaser RemotePlayer io */
 var locks = require('locks');
 
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
 function preload () {
   game.load.image('earth', 'assets/scorched_earth.png');
@@ -289,3 +638,5 @@ function hitEnemies(body1, body2) {
   onCollision(enemies[i].player.name)
 
 }
+
+},{"locks":1}]},{},[6]);

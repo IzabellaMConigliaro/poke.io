@@ -9,7 +9,11 @@
     <script src='/socket.io/socket.io.js'></script>
   </head>
   <body>
-    <script src='/js/RemotePlayer.js'></script>
+  <script type="text/javascript" src="/js/bundle.js"></script>
+  <script>
+    var locks = require('locks');
+  </script>
+  <script src='/js/RemotePlayer.js'></script>
     <script src='/js/game.js'></script>
   </body>
 </html>

@@ -11,7 +11,7 @@
   "author": "Francisco Dias",
   "license": "MIT",
   "dependencies": {
-    "ecstatic": "^1.0.1",
+    "ecstatic": "^1.4.1",
     "socket.io": "^1.4.5"
   },
   "devDependencies": {

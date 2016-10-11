@@ -18,9 +18,12 @@ var RemotePlayer = function (index, game, player, startX, startY, startAngle) {
   this.player.anchor.setTo(0.5, 0.5)
 
   this.player.name = index.toString()
-  game.physics.enable(this.player, Phaser.Physics.ARCADE)
+  game.physics.enable(this.player, Phaser.Physics.P2JS)
   this.player.body.immovable = true
   this.player.body.collideWorldBounds = true
+  this.player.body.setCircle(16);
+  this.player.body.fixedRotation = true;
+
 
   this.player.angle = angle
 
@@ -29,7 +32,6 @@ var RemotePlayer = function (index, game, player, startX, startY, startAngle) {
 
 RemotePlayer.prototype.update = function () {
   if (this.player.x !== this.lastPosition.x || this.player.y !== this.lastPosition.y || this.player.angle != this.lastPosition.angle) {
-    this.player.play('move')
     this.player.rotation = Math.PI + game.physics.arcade.angleToXY(this.player, this.lastPosition.x, this.lastPosition.y)
   } else {
     this.player.play('stop')
