@@ -2,8 +2,8 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
 function preload () {
-  game.load.image('earth', 'assets/scorched_earth.png');
-  game.load.image('teste', 'assets/tank2.png');
+  game.load.image('earth', 'assets/background.png');
+  game.load.image('teste', 'assets/pokemon2.png');
 
   game.load.atlas('dude', 'assets/tanks.png', 'assets/tanks.json');
   game.load.atlas('enemy', 'assets/enemy-tanks.png', 'assets/tanks.json');

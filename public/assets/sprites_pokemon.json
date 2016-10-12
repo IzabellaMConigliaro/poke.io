@@ -1,0 +1,196 @@
+{"frames": [
+
+{
+	"filename": "pokemon1",
+	"frame": {"x":98,"y":97,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon2",
+	"frame": {"x":386,"y":97,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon3",
+	"frame": {"x":194,"y":385,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon4",
+	"frame": {"x":290,"y":193,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon5",
+	"frame": {"x":386,"y":193,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon6",
+	"frame": {"x":1,"y":385,"w":95,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":17,"w":95,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon7",
+	"frame": {"x":290,"y":289,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon8",
+	"frame": {"x":290,"y":385,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon9",
+	"frame": {"x":386,"y":289,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon10",
+	"frame": {"x":98,"y":193,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon11",
+	"frame": {"x":98,"y":289,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon12",
+	"frame": {"x":1,"y":1,"w":95,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":95,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon13",
+	"frame": {"x":98,"y":385,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon14",
+	"frame": {"x":98,"y":1,"w":95,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":17,"w":95,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon15",
+	"frame": {"x":194,"y":97,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon16",
+	"frame": {"x":195,"y":1,"w":95,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":95,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon17",
+	"frame": {"x":290,"y":97,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon18",
+	"frame": {"x":292,"y":1,"w":95,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":95,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon19",
+	"frame": {"x":1,"y":97,"w":95,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":17,"w":95,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon20",
+	"frame": {"x":194,"y":193,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon21",
+	"frame": {"x":1,"y":193,"w":95,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":17,"w":95,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon22",
+	"frame": {"x":194,"y":289,"w":94,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":17,"w":94,"h":94},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "pokemon23",
+	"frame": {"x":1,"y":289,"w":95,"h":94},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":19,"y":17,"w":95,"h":94},
+	"sourceSize": {"w":128,"h":128}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "sprites_pokemon.png",
+	"format": "RGBA8888",
+	"size": {"w":481,"h":480},
+	"scale": "0.25",
+	"smartupdate": "$TexturePacker:SmartUpdate:e1b4a93d459f179a84f8ae657c1f1a36:86e4fec1f55ea23db7665f497eada6fc:e16effbe1fe3e9c85d47899602310140$"
+}
+}

@@ -350,16 +350,20 @@
 },{}],6:[function(require,module,exports){
 
 
+	/********************************************************/
+	/*
+	/*					BEGINNING CODE
+	/*
+	/********************************************************/
 
-	/* global Phaser RemotePlayer io */
 	var locks = require('locks');
 
 	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
 	function preload () {
-		game.load.image('earth', 'assets/scorched_earth.png');
-		game.load.atlas('dude', 'assets/tanks.png', 'assets/tanks.json');
-		game.load.atlas('enemy', 'assets/enemy-tanks.png', 'assets/tanks.json');
+		game.load.image('background', 'assets/background.png');
+		game.load.atlas('currentPlayer', 'assets/sprites_pokemon.png', 'assets/sprites_pokemon.json');
+		game.load.atlas('enemy', 'assets/sprites_pokemon.png', 'assets/sprites_pokemon.json');
 	}
 
 	var socket;
@@ -380,7 +384,7 @@
 			playerId = socket.io.engine.id;
 
 			var numb = playerId.replace(/\D/g,'');
-			numb = numb%6;
+			numb = numb%24;
 
 			player.frame = numb;
 		});
@@ -396,18 +400,14 @@
 		playerCollisionGroup = game.physics.p2.createCollisionGroup();
 		enemiesCollisionGroup = game.physics.p2.createCollisionGroup();
 
-		land = game.add.tileSprite(0, 0, 800, 600, 'earth');
+		land = game.add.tileSprite(0, 0, 800, 600, 'background');
 		land.fixedToCamera = true;
 
 		var startX = Math.round(Math.random() * (1000) - 500);
 		var startY = Math.round(Math.random() * (1000) - 500);
 
-		var sprites = ["tank1", "tank2", "tank3", "tank4", "tank5", "tank6"];
-
-		player = game.add.sprite(startX, startY, 'dude', sprites[0]);
+		player = game.add.sprite(startX, startY, 'currentPlayer');
 		player.anchor.setTo(0.5, 0.5);
-		player.animations.add('move', [0, 1, 2, 3, 4, 5, 6, 7], 20, true);
-		player.animations.add('stop', [3], 20, true)
 
 		game.physics.enable(player, Phaser.Physics.P2JS);
 		player.body.collideWorldBounds = true;
