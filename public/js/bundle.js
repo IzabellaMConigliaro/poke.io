@@ -364,12 +364,14 @@
 		game.load.image('background', 'assets/background.png');
 		game.load.atlas('currentPlayer', 'assets/sprites_pokemon.png', 'assets/sprites_pokemon.json');
 		game.load.atlas('enemy', 'assets/sprites_pokemon.png', 'assets/sprites_pokemon.json');
+		game.load.image('logo', 'assets/logo.png');
 	}
 
 	var socket;
 	var land;
 	var player;
 	var enemies;
+	var logo;
 	var currentSpeed = 300;
 	var cursors;
 	var playerCollisionGroup;
@@ -403,6 +405,10 @@
 		land = game.add.tileSprite(0, 0, 800, 600, 'background');
 		land.fixedToCamera = true;
 
+		logo = game.add.sprite(20, 150, 'logo');
+		logo.bringToTop();
+		game.input.onDown.add(removeLogo, this);
+
 		var startX = Math.round(Math.random() * (1000) - 500);
 		var startY = Math.round(Math.random() * (1000) - 500);
 
@@ -423,6 +429,7 @@
 		enemies = [];
 
 		player.bringToTop();
+		logo.bringToTop();
 
 		game.camera.follow(player);
 		game.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
@@ -431,6 +438,8 @@
 		game.camera.focusOnXY(0, 0);
 
 		cursors = game.input.keyboard.createCursorKeys();
+
+		setTimeout(removeLogo, 1000);
 
 		setEventHandlers()
 	}
@@ -618,6 +627,11 @@
 		console.info(body2.id, enemies[i].player.body.id);
 
 		onCollision(enemies[i].player.name);
+	}
+
+	function removeLogo () {
+		game.input.onDown.remove(removeLogo, this);
+		logo.kill();
 	}
 
 },{"locks":1}]},{},[6]);
