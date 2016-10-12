@@ -376,6 +376,26 @@ var enemiesCollisionGroup
 function create () {
   socket = io.connect()
 
+	var playerId;
+
+	socket.on('connect', function () {
+		playerId = socket.io.engine.id;
+
+		console.log(playerId)
+
+		var sprites = ["tank1", "tank2", "tank3", "tank4", "tank5", "tank6"];
+
+		var numb = playerId.replace(/\D/g,'');
+		//numb = numb.join("");
+		numb = numb%6;
+
+		player.frame = numb;
+
+
+		//player = game.add.sprite(startX, startY, 'dude', sprites[numb])
+	});
+
+
   // Resize our game world to be a 2000 x 2000 square
   var bounds = new Phaser.Rectangle(0, 0, 800, 600);
 
@@ -395,7 +415,14 @@ function create () {
   // The base of our player
   var startX = Math.round(Math.random() * (1000) - 500)
   var startY = Math.round(Math.random() * (1000) - 500)
-  player = game.add.sprite(startX, startY, 'dude')
+
+	var sprites = ["tank1", "tank2", "tank3", "tank4", "tank5", "tank6"];
+
+	// var numb = playerId.replace(/\D/g,'');
+	// //numb = numb.join("");
+	// numb = numb%6;
+
+  player = game.add.sprite(startX, startY, 'dude', sprites[0])
   player.anchor.setTo(0.5, 0.5)
   player.animations.add('move', [0, 1, 2, 3, 4, 5, 6, 7], 20, true)
   player.animations.add('stop', [3], 20, true)
