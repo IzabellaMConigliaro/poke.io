@@ -583,14 +583,11 @@ function onReleaseLock() {
 
 function update() {
 
-  // for (var i = 0; i < enemies.length; i++) {
-  //   if (enemies[i].alive) {
-  //     enemies[i].update()
-  //     if(game.physics.p2.collisionGroups(player, enemies[i].player)){
-  //       console.info("teste");
-  //     }
-  //   }
-  // }
+  for (var i = 0; i < enemies.length; i++) {
+    if (enemies[i].alive) {
+      enemies[i].update();
+    }
+  }
 
 
   player.body.setZeroVelocity();
@@ -613,7 +610,26 @@ function update() {
     player.body.moveDown(currentSpeed);
   }
 
-    socket.emit('move player', { x: player.x, y: player.y, angle: player.angle })
+	if (game.input.activePointer.isDown) {
+		var RIGHT = 1, LEFT = 0;
+		var UP = 0, DOWN = 1;
+
+		if (Math.floor(game.input.x/(game.width/2)) === LEFT) {
+			player.body.moveLeft(currentSpeed);
+		} else if (Math.floor(game.input.x/(game.width/2)) === RIGHT) {
+			player.body.moveRight(currentSpeed);
+		}
+
+		if (Math.floor(game.input.y/(game.height/2)) === UP) {
+			player.body.moveUp(currentSpeed);
+		} else if (Math.floor(game.input.y/(game.height/2)) === DOWN) {
+			player.body.moveDown(currentSpeed);
+		}
+
+	}
+
+
+	socket.emit('move player', { x: player.x, y: player.y, angle: player.angle })
 
 }
 

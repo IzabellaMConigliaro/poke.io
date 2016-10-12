@@ -10,7 +10,15 @@ var RemotePlayer = function (index, game, player, startX, startY, startAngle) {
   this.player = player
   this.alive = true
 
-  this.player = game.add.sprite(x, y, 'enemy')
+  var sprites = ["tank1", "tank2", "tank3", "tank4", "tank5", "tank6"];
+
+  var numb = index.replace(/\D/g,'');
+  //numb = numb.join("");
+  numb = numb%6;
+
+  this.player = game.add.sprite(x, y, 'enemy', sprites[numb]);
+
+  //this.player = game.add.sprite(x, y, 'enemy')
 
   this.player.animations.add('move', [0, 1, 2, 3, 4, 5, 6, 7], 20, true)
   this.player.animations.add('stop', [3], 20, true)
@@ -19,6 +27,7 @@ var RemotePlayer = function (index, game, player, startX, startY, startAngle) {
 
   this.player.name = index.toString()
   game.physics.enable(this.player, Phaser.Physics.P2JS)
+  //game.physics.enable(this.player, Phaser.Physics.ARCADE)
   this.player.body.immovable = true
   this.player.body.collideWorldBounds = true
   this.player.body.setCircle(16);
@@ -32,9 +41,9 @@ var RemotePlayer = function (index, game, player, startX, startY, startAngle) {
 
 RemotePlayer.prototype.update = function () {
   if (this.player.x !== this.lastPosition.x || this.player.y !== this.lastPosition.y || this.player.angle != this.lastPosition.angle) {
-    this.player.rotation = Math.PI + game.physics.arcade.angleToXY(this.player, this.lastPosition.x, this.lastPosition.y)
-  } else {
-    this.player.play('stop')
+    this.player.body.x = this.player.x;
+    this.player.body.y = this.player.y;
+    //this.player.rotation = Math.PI + game.physics.arcade.angleToXY(this.player, this.lastPosition.x, this.lastPosition.y)
   }
 
   this.lastPosition.x = this.player.x
